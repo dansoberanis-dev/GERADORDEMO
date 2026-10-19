@@ -585,7 +585,6 @@
           <span>Guia</span>
         </a>
         <button type="button" class="btn-top-new" id="newProposal" title="Criar nova proposta (limpar campos)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           <span>+ Nova</span>
         </button>
         <button type="button" class="btn-top-download" onclick="printProposal()" title="Baixar proposta em PDF">
@@ -1040,7 +1039,6 @@ function doSaveProposal(silent=false){
       list[idx] = Object.assign({}, list[idx], rec, {updatedAt:new Date().toISOString()});
       saveHistory(list);
       renderHistory();
-cloudSyncDown();
       cloudSaveRecord(list[idx]);
       return true;
     }
@@ -1051,7 +1049,6 @@ cloudSyncDown();
   saveHistory(list);
   editingId = full.id;
   renderHistory();
-cloudSyncDown();
   cloudSaveRecord(full);
   return true;
 }
@@ -1123,7 +1120,6 @@ async function cloudSyncDown(){ return; // Na versao demo os dados ficam 100% is
       const cloudList = rows.map(r => Object.assign({ id: r.id, createdAt: r.created_at, updatedAt: r.updated_at }, r.dados));
       saveHistory(cloudList);
       renderHistory();
-cloudSyncDown();
     }
   } catch(err){ console.warn('Sync cloud offline:', err); }
 }
@@ -1214,7 +1210,6 @@ function deleteProposal(id){
   saveHistory(loadHistory().filter(p=>p.id!==id));
   if(editingId===id) editingId=null;
   renderHistory();
-cloudSyncDown();
   cloudDeleteRecord(id);
 }
 
@@ -1295,7 +1290,6 @@ $('#importFile').addEventListener('change', e=>{
       incoming.forEach(p=>{ if(p && p.id && !ids.has(p.id)) list.push(p); });
       saveHistory(list);
       renderHistory();
-cloudSyncDown();
       alert(`Backup importado: ${incoming.length} registro(s).`);
     }catch(err){
       alert('Arquivo inválido. Selecione um backup JSON gerado por este gerador.');
