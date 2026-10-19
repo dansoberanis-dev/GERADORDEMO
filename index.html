@@ -149,18 +149,19 @@
     display:flex;flex-direction:column;justify-content:center;
   }
   /* faixa branca inferior: evento à esquerda, cliente à direita (mesma altura) */
-  .cover-foot{
-    position:absolute;left:7%;right:7%;bottom:2%;z-index:3;
-    display:flex;justify-content:space-between;align-items:flex-end;gap:5%;
+  .cover-right-info{
+    position:absolute;right:7%;bottom:12%;z-index:3;
+    display:flex;flex-direction:column;align-items:flex-end;gap:calc(0.8 * var(--kv) * var(--u));
+    max-width:48%;text-align:right;
   }
+  .cover-right-info .client-slot{
+    position:static;transform:none;max-width:100%;text-align:right;
+  }
+  .cover-right-info .client-name{font-size:calc(1.55 * var(--k) * var(--u));line-height:1.15;font-weight:700;color:#1a1a22}
   .cover-event{
-    font-family:'Montserrat',sans-serif;font-weight:700;line-height:1.15;
-    font-size:calc(1.2 * var(--k) * var(--u));color:#0c5ba3;
+    font-family:'Montserrat',sans-serif;font-weight:700;line-height:1.2;
+    font-size:calc(1.2 * var(--k) * var(--u));color:#e65100;
   }
-  .cover-foot .client-slot{
-    position:static;transform:none;max-width:46%;text-align:right;
-  }
-  .cover-foot .client-name{font-size:calc(1.55 * var(--k) * var(--u));line-height:1.15}
   .content{position:relative;z-index:2;padding:6% 7%;height:100%;display:flex;flex-direction:column}
 
   /* logo VDEMETRIO fixa na capa (topo-esquerdo) */
@@ -707,12 +708,12 @@
           <div class="title">PROPOSTA DE<br/>PARCERIA</div>
           <div class="line"></div>
         </div>
-        <div class="cover-foot">
-          <div class="cover-event" id="p1_event">Nome do evento | data</div>
+        <div class="cover-right-info">
           <div class="client-slot" id="p1_client_slot" style="display:none">
             <div class="client-kicker">Cliente</div>
             <div class="client-name" id="p1_client_name"></div>
           </div>
+          <div class="cover-event" id="p1_event">Nome do evento | data</div>
         </div>
       </section>
 
