@@ -410,6 +410,86 @@
   .link-btn{background:none;border:none;color:var(--muted);font-family:'Heebo',sans-serif;font-size:12px;
     cursor:pointer;text-decoration:underline;padding:4px}
   .link-btn:hover{color:#fff}
+
+  /* BOTÃO FLUTUANTE TRAVADO DO WHATSAPP (APÓS LOGIN) */
+  .floating-wa-btn {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #ffffff !important;
+    text-decoration: none;
+    padding: 13px 20px;
+    border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 2px 6px rgba(0,0,0,0.15);
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .floating-wa-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6);
+    color: #ffffff !important;
+  }
+  body.authed .floating-wa-btn {
+    display: inline-flex;
+  }
+  @media print {
+    .floating-wa-btn { display: none !important; }
+  }
+  @media (max-width: 600px) {
+    .floating-wa-btn {
+      bottom: 78px; /* acima do botão mobile de alternar formulário/prévia */
+      right: 16px;
+      padding: 11px 16px;
+      font-size: 13px;
+    }
+  }
+
+  /* CRÉDITO DO DESENVOLVEDOR NO FORMULÁRIO (AMARELO NO TEMA ESCURO) */
+  .dev-credit-form {
+    background: rgba(254, 240, 138, 0.08);
+    border: 1px solid rgba(250, 204, 21, 0.35);
+    border-radius: 6px;
+    padding: 8px 11px;
+    margin: 6px 0 10px;
+    font-size: 12px;
+    color: #facc15; /* Amarelo vibrante */
+    line-height: 1.45;
+    font-family: 'Heebo', sans-serif;
+  }
+  .dev-credit-form a {
+    color: #fef08a !important;
+    text-decoration: underline;
+    font-weight: 700;
+  }
+  .dev-credit-form a:hover {
+    color: #ffffff !important;
+  }
+
+  /* CRÉDITO DO DESENVOLVEDOR NA TELA DE LOGIN (FONTE PRETA) */
+  .dev-credit-login {
+    margin-top: 22px;
+    font-size: 13px;
+    color: #000000;
+    text-align: center;
+    font-family: 'Heebo', sans-serif;
+    line-height: 1.4;
+  }
+  .dev-credit-login a {
+    color: #000000 !important;
+    text-decoration: underline;
+    font-weight: 700;
+  }
+  .dev-credit-login a:hover {
+    color: #0c5ba3 !important;
+  }
 </style>
 </head>
 <body>
@@ -430,6 +510,9 @@
     <button type="submit" class="login-btn">Entrar</button>
     <div class="login-err" id="login_err">Usuário ou senha incorretos</div>
   </form>
+  <div class="dev-credit-login">
+    Desenvolvido por <a href="https://wa.me/5541984542307?text=Ol%C3%A1%2C%20vim%20pelo%20site%20do%20gerador%2C%20quero%20personalizar%20o%20meu" target="_blank" rel="noopener noreferrer"><strong>Daniel Soberanis</strong></a>
+  </div>
 </div>
 
 <div class="app">
@@ -451,6 +534,9 @@
     <div class="side-head-row">
       <h1>Gerador de Proposta</h1>
       <button id="logoutBtn" class="link-btn" type="button">Sair</button>
+    </div>
+    <div class="dev-credit-form">
+      Desenvolvido por <a href="https://wa.me/5541984542307?text=Ol%C3%A1%2C%20vim%20pelo%20site%20do%20gerador%2C%20quero%20personalizar%20o%20meu" target="_blank" rel="noopener noreferrer"><strong>Daniel Soberanis</strong></a>. Quer o gerador personalizado para a sua empresa? Entre em contato!
     </div>
     <div style="background:rgba(12,91,163,0.12);border:1px solid rgba(12,91,163,0.25);border-radius:6px;padding:9px 11px;margin:6px 0 12px;font-size:11.5px;color:#93c5fd;line-height:1.4">
       💡 <b>Demonstração Interativa</b>: Edite os campos e veja a proposta ser criada ao lado em tempo real. Esta ferramenta pode ser 100% personalizada para sua marca.
@@ -1338,6 +1424,15 @@ cloudSyncDown();
     </div>
   </div>
 </div>
+
+
+<!-- BOTÃO FLUTUANTE TRAVADO DO WHATSAPP (APÓS LOGIN) -->
+<a href="https://wa.me/5541984542307?text=Ol%C3%A1%2C%20vim%20pelo%20site%20do%20gerador%2C%20quero%20personalizar%20o%20meu" target="_blank" rel="noopener noreferrer" class="floating-wa-btn" title="Falar no WhatsApp">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.592 2.654-.696c1.004.577 1.764.846 2.806.847 3.18 0 5.767-2.586 5.768-5.766.001-3.182-2.585-5.768-5.768-5.768zm7.391 5.765c-.002 4.074-3.318 7.39-7.393 7.39-1.288 0-2.49-.332-3.535-.913l-4.494 1.176 1.199-4.378c-.652-1.096-1.021-2.378-1.022-3.275.002-4.074 3.319-7.39 7.394-7.39 4.075 0 7.392 3.316 7.394 7.391z"/>
+  </svg>
+  <span>Quero meu Gerador</span>
+</a>
 
 </body>
 </html>
