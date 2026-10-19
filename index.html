@@ -584,7 +584,7 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <span>Guia</span>
         </a>
-        <button type="button" class="btn-top-new" id="btnTopNew" title="Criar nova proposta (limpar campos)">
+        <button type="button" class="btn-top-new" id="newProposal" title="Criar nova proposta (limpar campos)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           <span>+ Nova</span>
         </button>
@@ -659,7 +659,7 @@
     <div class="section-title">Histórico de propostas</div>
     <p class="hint" style="margin:0 0 10px">Salve as propostas para consultar depois e exportar o relatório em CSV.</p>
     <div class="btn-row">
-      <!-- botao nova proposta agora esta no topo fixo -->
+      <button class="btn btn-ghost" id="newProposal" style="width:100%;padding:11px;font-weight:600;letter-spacing:.3px">+ Nova proposta (limpar campos)</button>
     </div>
     <div class="btn-row">
       <button class="btn btn-ghost" id="exportCsv">⬇ Relatório CSV</button>
@@ -1059,7 +1059,6 @@ cloudSyncDown();
 $('#generate').addEventListener('click', ()=>{
   updatePreview();
   const saved = doSaveProposal(false);
-  if(saved){ setTimeout(showDownloadConfirm, 500); }
   if(saved){
     const btn = $('#generate');
     const orig = btn.innerHTML;
@@ -1472,65 +1471,48 @@ renderHistory();
   let lastTargetPage = null;
 
   function scrollToTarget(pageId){
+    // Executa apenas em telas desktop / amplas onde a sidebar e o preview ficam lado a lado
     if(window.innerWidth <= 900) return;
     
+    const pw = document.querySelector('.preview-wrap');
     const targetEl = document.getElementById(pageId);
-    if(!targetEl) return;
+    if(!pw || !targetEl) return;
+
+    if(lastTargetPage === pageId) return; // Evita rolagem repetitiva desnecessária se já está na página
+    lastTargetPage = pageId;
 
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(() => {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
+      const pwRect = pw.getBoundingClientRect();
+      const elRect = targetEl.getBoundingClientRect();
+      const offsetTop = elRect.top - pwRect.top + pw.scrollTop - 20;
+
+      pw.scrollTo({
+        top: Math.max(0, offsetTop),
+        behavior: 'smooth'
+      });
+    }, 120);
   }
 
-  function handleFieldEvent(e){
-    const t = e.target;
-    if(!t) return;
-    const id = t.id;
+  // Ouvinte dinâmico para foco e digitação nos campos do formulário
+  document.addEventListener('focusin', (e) => {
+    const id = e.target.id;
     if(FIELD_PAGE_MAP[id]){
       scrollToTarget(FIELD_PAGE_MAP[id]);
-    } else if(t.closest('#items') || id === 'addItem'){
+    } else if(e.target.closest('#items') || e.target.id === 'addItem'){
       scrollToTarget('pg4');
     }
-  }
+  });
 
-  document.addEventListener('focusin', handleFieldEvent, true);
-  document.addEventListener('click', handleFieldEvent, true);
-  document.addEventListener('input', handleFieldEvent, true);
+  document.addEventListener('input', (e) => {
+    const id = e.target.id;
+    if(FIELD_PAGE_MAP[id]){
+      scrollToTarget(FIELD_PAGE_MAP[id]);
+    } else if(e.target.closest('#items')){
+      scrollToTarget('pg4');
+    }
+  });
 })();
-
-
-// ===== MODAL DE CONFIRMAÇÃO DE DOWNLOAD =====
-function showDownloadConfirm(){
-  const m = document.getElementById('downloadConfirmModal');
-  if(m) m.classList.add('active');
-}
-function hideDownloadConfirm(){
-  const m = document.getElementById('downloadConfirmModal');
-  if(m) m.classList.remove('active');
-}
-const btnYes = document.getElementById('btnConfirmDownloadYes');
-const btnNo = document.getElementById('btnConfirmDownloadNo');
-if(btnYes) btnYes.addEventListener('click', () => { hideDownloadConfirm(); printProposal(); });
-if(btnNo) btnNo.addEventListener('click', () => { hideDownloadConfirm(); });
-
-// Conecta o botão verde de Nova Proposta no topo
-const btnTopNew = document.getElementById('btnTopNew');
-if(btnTopNew) btnTopNew.addEventListener('click', () => {
-  if(confirm('Deseja iniciar uma nova proposta? Os campos serão limpos.')){
-    editingId = null;
-    ['#e_clientname','#e_name','#e_date','#e_time','#e_loc','#e_pubnum','#e_pubdesc','#e_about','#e_partners',
-     '#b_total','#b_discount','#b_deadline','#b_operation','#b_notes','#e_contactname','#e_contactphone']
-    .forEach(sel=>{ const el = document.querySelector(sel); if(el) el.value=''; });
-    items = [];
-    totalManual = false;
-    renderItems();
-    updatePreview();
-    if(typeof saveDraft === 'function') saveDraft();
-    const pw = document.querySelector('.preview-wrap');
-    if(pw) pw.scrollTo({top:0, behavior:'smooth'});
-  }
-});
 
 cloudSyncDown();
 </script>
