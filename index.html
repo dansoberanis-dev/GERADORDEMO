@@ -669,6 +669,23 @@
       <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
     </div>
     <div class="history-list" id="history"></div>
+  
+<!-- MODAL DE CONFIRMAÇÃO DE DOWNLOAD APÓS SALVAR -->
+<div class="confirm-modal-overlay" id="downloadConfirmModal" onclick="if(event.target===this) hideDownloadConfirm()">
+  <div class="confirm-modal-card">
+    <div class="confirm-modal-icon">✓</div>
+    <h3>Proposta Salva com Sucesso!</h3>
+    <p>Os dados foram gravados no seu histórico. Deseja fazer o <b>download do arquivo PDF</b> da proposta agora?</p>
+    <div class="confirm-modal-actions">
+      <button type="button" class="btn-confirm-yes" id="btnConfirmDownloadYes" onclick="confirmDownloadYes()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Sim, Baixar PDF</span>
+      </button>
+      <button type="button" class="btn-confirm-no" id="btnConfirmDownloadNo" onclick="hideDownloadConfirm()">Não, Depois</button>
+    </div>
+  </div>
+</div>
+
   </aside>
 
   <!-- PREVIEW -->
@@ -1073,8 +1090,36 @@ $('#generate').addEventListener('click', ()=>{
       const pw = document.querySelector('.preview-wrap');
       if(pw) pw.scrollTo({top:0,behavior:'smooth'});
     }
+
+    // Exibe modal de confirmação de download do PDF
+    showDownloadConfirm();
   }
 });
+
+
+function showDownloadConfirm(){
+  const m = document.getElementById('downloadConfirmModal');
+  if(m) m.classList.add('active');
+}
+function hideDownloadConfirm(){
+  const m = document.getElementById('downloadConfirmModal');
+  if(m) m.classList.remove('active');
+}
+function confirmDownloadYes(){
+  hideDownloadConfirm();
+  printProposal();
+}
+window.showDownloadConfirm = showDownloadConfirm;
+window.hideDownloadConfirm = hideDownloadConfirm;
+window.confirmDownloadYes = confirmDownloadYes;
+
+window.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    hideDownloadConfirm();
+    if(typeof closeHelpModal === 'function') closeHelpModal();
+  }
+});
+
 // nome do PDF = título da página no momento do print (ex: Proposta CASAS BAHIA - VDEMETRIO)
 function printProposal(){
   // No mobile, garante que a prévia está ativa antes de imprimir
@@ -1568,21 +1613,7 @@ cloudSyncDown();
 </a>
 
 
-<!-- MODAL DE CONFIRMAÇÃO DE DOWNLOAD APÓS SALVAR -->
-<div class="confirm-modal-overlay" id="downloadConfirmModal">
-  <div class="confirm-modal-card">
-    <div class="confirm-modal-icon">✓</div>
-    <h3>Proposta Salva com Sucesso!</h3>
-    <p>Os dados foram gravados no seu histórico. Deseja fazer o <b>download do arquivo PDF</b> da proposta agora?</p>
-    <div class="confirm-modal-actions">
-      <button type="button" class="btn-confirm-yes" id="btnConfirmDownloadYes">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>Sim, Baixar PDF</span>
-      </button>
-      <button type="button" class="btn-confirm-no" id="btnConfirmDownloadNo">Não, Depois</button>
-    </div>
-  </div>
-</div>
+
 
 </body>
 </html>
